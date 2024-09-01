@@ -85,10 +85,10 @@ def insertarUsuario(req_body):
     
     try:
         user = tableStorage.get_entity(partition_key="UserNoFap", row_key=rowkey)
-        return {'name':user.get('name'),'racha':user.get("racha")}
+        return {'name':user.get('name'),'racha':user.get("racha"),'email':user.get('email')}
     except:
         tableStorage.create_entity(entity=user_entity)
-        return {"name": req_body.get("name"),"racha": 1}
+        return {"name": req_body.get("name"),"racha": 1,'email':user.get('email')}
 
 
 def actualizarRacha(identifier):
