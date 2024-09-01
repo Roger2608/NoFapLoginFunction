@@ -24,7 +24,6 @@ def http_trigger_login(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
         entitie=insertarUsuario(req_body)
-        print(req_body)
     except ValueError:
         return func.HttpResponse(
             "Invalid JSON",
