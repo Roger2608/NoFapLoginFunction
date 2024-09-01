@@ -80,7 +80,7 @@ def insertarUsuario(req_body):
         "email": req_body.get("email"),
         "phone": req_body.get("phone"),
         "racha": 1,
-        "start_date": datetime.now().isoformat() + 'Z',
+        "update_date": datetime.now()
     }
     
     try:
@@ -88,13 +88,16 @@ def insertarUsuario(req_body):
         return {'name':user.get('name'),'racha':user.get("racha"),'email':user.get('email')}
     except:
         tableStorage.create_entity(entity=user_entity)
-        return {"name": req_body.get("name"),"racha": 1,'email':user.get('email')}
+        return {"name": user_entity.get("name"),"racha": 1,'email':user_entity.get('email')}
 
 
 def actualizarRacha(identifier):
     tableStorage = conectTableStorage()
     # Filtra registros por propiedad
     user = tableStorage.get_entity(partition_key="UserNoFap", row_key=identifier)
-    user["racha"] += 1
-    tableStorage.update_entity(entity=user)
-    return {'email':user.get('email'),'racha':user.get("racha")}
+    if user["update_date"].date() != datetime.now().date():
+        user["racha"] += 1
+        user["update_date"] = datetime.now()
+        tableStorage.update_entity(entity=user)
+        return {'email':user.get('email'),'racha':user.get("racha"),'update_racha':True,'message':'Buena Tilin hoy es un nuevo día'}
+    return {'update_racha':False,'message':'Ya has actualizado tu racha el día de hoy'}
